@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Recommendation System</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #eef2f3;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        h1 {
+            color: #4A90E2;
+            margin-bottom: 20px;
+        }
+        .input-container {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        input, button {
+            padding: 15px;
+            border-radius: 5px;
+            transition: 0.3s;
+            font-size: 16px;
+        }
+        input {
+            border: 2px solid #4A90E2;
+            width: 300px;
+            margin-right: 10px;
+        }
+        input:focus {
+            border-color: #0066cc;
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 102, 204, 0.5);
+        }
+        button {
+            margin-top: 15px;
+            background-color: #4A90E2;
+            color: white;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        button:hover {
+            background-color: #0066cc;
+        }
+        .recommendation {
+            margin-top: 20px;
+            max-width: 600px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .recommendation div {
+            padding: 10px;
+            border: 1px solid #e2e2e2;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            transition: 0.3s;
+        }
+        .recommendation div:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Anime Recommendation System</h1>
+    <input type="text" id="animeInput" placeholder="Enter anime genre...">
+    <button onclick="getRecommendations()">Get Recommendations</button>
+    <div id="recommendations" class="recommendation"></div>
+
+    <script>
+        async function getRecommendations() {
+            const animeName = document.getElementById('animeInput').value;
+            const response = await fetch(`http://127.0.0.1:5000/recommend?anime=${animeName}`);
+            const data = await response.json();
+            const recommendationsDiv = document.getElementById('recommendations');
+            recommendationsDiv.innerHTML = '';
+
+            if (response.ok) {
+                data.forEach(anime => {
+                    const div = document.createElement('div');
+                    div.innerHTML = `<strong>${anime.name}</strong> <br> Genre: ${anime.genre} <br> Rating: ${anime.rating}`;
+                    recommendationsDiv.appendChild(div);
+                });
+            } else {
+                recommendationsDiv.innerHTML = `<strong>${data.error}</strong>`;
+            }
+        }
+    </script>
+</body>
+</html>
